@@ -6,14 +6,14 @@ To setup:
 $ yarn
 ```
 
+To run a live-reloading development server on `localhost:8080`:
+
+```
+$ yarn start
+```
+
 To build:
 
 ```sh
 $ yarn build
-```
-
-Then serve the contents of dist/, for example:
-
-```sh
-$ cd dist && python -m SimpleHTTPServer 8000
 ```
