@@ -1,9 +1,8 @@
 import 'normalize.css';
+import { BOARD_TILE_WIDTH, BOARD_TILE_HEIGHT } from './constants';
+import { DIRECTIONS, initialModel, updateModel } from './model';
 
 const MILLISECONDS_BETWEEN_UPDATES = 300;
-
-const BOARD_TILE_WIDTH = 60;
-const BOARD_TILE_HEIGHT = 60;
 
 const TILE_WIDTH = 10;
 const TILE_HEIGHT = 10;
@@ -11,24 +10,15 @@ const TILE_HEIGHT = 10;
 const BOARD_PIXEL_WIDTH = TILE_WIDTH * BOARD_TILE_WIDTH;
 const BOARD_PIXEL_HEIGHT = TILE_HEIGHT * BOARD_TILE_HEIGHT;
 
-const DIRECTIONS = {
-  UP: { x: 0, y: -1 },
-};
-
 const startGame = () => {
   const canvas = document.getElementById('snake-canvas');
   canvas.width = BOARD_PIXEL_WIDTH;
   canvas.height = BOARD_PIXEL_HEIGHT;
 
   const context = canvas.getContext('2d');
-  const model = {
-    direction: DIRECTIONS.UP,
-    snake: [{ x: 5, y: 17 }, { x: 6, y: 17 }, { x: 7, y: 17 }],
-  };
-
   const timeNotSet = null;
 
-  nextFrame(timeNotSet, context, model);
+  nextFrame(timeNotSet, context, initialModel);
 };
 
 
@@ -37,6 +27,7 @@ const nextFrame = (lastUpdateTime, canvas_context, model) => {
         advanceOneFrame.bind(null, lastUpdateTime, canvas_context, model);
   window.requestAnimationFrame(advanceOneFrameCallback);
 };
+
 
 const advanceOneFrame = (
   lastUpdateTime,
@@ -56,25 +47,11 @@ const advanceOneFrame = (
     return;
   }
 
-  const updatedModel = update(model);
+  const updatedModel = updateModel(model);
   drawUpdate(canvas_context, updatedModel);
 
   lastUpdateTime = thisFrameTime;
   nextFrame(lastUpdateTime, canvas_context, updatedModel);
-};
-
-
-const update = (model) => {
-  const { direction, snake } = model;
-  const head = snake[0];
-  const nextHead = {
-    x: (BOARD_TILE_WIDTH + head.x + direction.x) % BOARD_TILE_WIDTH,
-    y: (BOARD_TILE_HEIGHT + head.y + direction.y) % BOARD_TILE_HEIGHT,
-  };
-  return {
-    direction,
-    snake: [nextHead, ...snake.slice(0, -1)],
-  };
 };
 
 
