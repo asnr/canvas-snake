@@ -44,6 +44,7 @@ export const initialModel = () => {
   return {
     food: placeFoodRandomly(snake),
     snake,
+    stillPlaying: true,
   };
 };
 
@@ -60,13 +61,15 @@ export const updateModel = ({ food, snake }) => {
     y: (BOARD_TILE_HEIGHT + head.y + direction.y) % BOARD_TILE_HEIGHT,
   };
 
-  const foodEaten = nextHead.x == food.x && nextHead.y == food.y;
+  const foodEaten = pointsEqual(food, nextHead);
   const tail = foodEaten ? snake : snake.slice(0, -1);
+  const stillPlaying = !snakeHasRunIntoItself(nextHead, tail);
   const newSnake = [nextHead, ...tail];
 
   return {
     food: foodEaten ? placeFoodRandomly(newSnake) : food,
     snake: newSnake,
+    stillPlaying,
   };
 };
 
@@ -78,6 +81,10 @@ const placeFoodRandomly = snake => {
   }
   return food;
 };
+
+
+const snakeHasRunIntoItself = (head, tail) =>
+  tail.some(vertebra => pointsEqual(vertebra, head));
 
 
 const pointsEqual = (point, otherPoint) =>

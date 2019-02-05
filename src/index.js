@@ -53,8 +53,10 @@ const advanceOneFrame = (
   const updatedModel = updateModel(model);
   drawUpdate(canvas_context, updatedModel);
 
-  lastUpdateTime = thisFrameTime;
-  nextFrame(lastUpdateTime, canvas_context, updatedModel);
+  if (updatedModel.stillPlaying) {
+    lastUpdateTime = thisFrameTime;
+    nextFrame(lastUpdateTime, canvas_context, updatedModel);
+  }
 };
 
 
