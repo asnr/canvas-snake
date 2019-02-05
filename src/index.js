@@ -21,7 +21,7 @@ const startGame = () => {
   const context = canvas.getContext('2d');
   const timeNotSet = null;
 
-  nextFrame(timeNotSet, context, initialModel);
+  nextFrame(timeNotSet, context, initialModel());
 };
 
 
@@ -58,12 +58,20 @@ const advanceOneFrame = (
 };
 
 
-const drawUpdate = (context, model) => {
+const drawUpdate = (context, { food, snake }) => {
   context.fillStyle = '#fdf6e3';
   context.fillRect(0, 0, BOARD_PIXEL_WIDTH, BOARD_PIXEL_HEIGHT);
 
+  context.fillStyle = '#d33682';
+  context.fillRect(
+    TILE_WIDTH * food.x,
+    TILE_HEIGHT * food.y,
+    TILE_WIDTH,
+    TILE_HEIGHT,
+  );
+
   context.fillStyle = '#586e75';
-  model.snake.forEach(({ x, y }) => {
+  snake.forEach(({ x, y }) => {
     context.fillRect(TILE_WIDTH * x, TILE_HEIGHT * y, TILE_WIDTH, TILE_HEIGHT);
   });
 };

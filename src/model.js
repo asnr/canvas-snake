@@ -39,14 +39,19 @@ export const directionIsAllowed = key =>
   ALLOWED_DIRECTIONS[currentDirection].find(x => x === key) !== undefined;
 
 
-export const initialModel = {
-  snake: [{ x: 5, y: 17 }, { x: 6, y: 17 }, { x: 7, y: 17 }],
+export const initialModel = () => {
+  const snake = [{ x: 5, y: 17 }, { x: 6, y: 17 }, { x: 7, y: 17 }];
+  return {
+    food: placeFoodRandomly(snake),
+    snake,
+  };
 };
 
 
-export const updateModel = ({ snake }) => {
+export const updateModel = ({ food, snake }) => {
   const directionKey = nextDirection ? nextDirection : currentDirection;
   nextDirection = null;
+  currentDirection = directionKey;
 
   const direction = DIRECTION[directionKey];
   const head = snake[0];
@@ -55,8 +60,39 @@ export const updateModel = ({ snake }) => {
     y: (BOARD_TILE_HEIGHT + head.y + direction.y) % BOARD_TILE_HEIGHT,
   };
 
-  currentDirection = directionKey;
+  const foodEaten = nextHead.x == food.x && nextHead.y == food.y;
+  const tail = foodEaten ? snake : snake.slice(0, -1);
+  const newSnake = [nextHead, ...tail];
+
   return {
-    snake: [nextHead, ...snake.slice(0, -1)],
+    food: foodEaten ? placeFoodRandomly(newSnake) : food,
+    snake: newSnake,
   };
+};
+
+
+const placeFoodRandomly = snake => {
+  let food = randomPointOnBoard(BOARD_TILE_WIDTH, BOARD_TILE_HEIGHT);
+  while (snake.some(vertebra => pointsEqual(vertebra, food))) {
+    food = randomPointOnBoard(BOARD_TILE_WIDTH, BOARD_TILE_HEIGHT);
+  }
+  return food;
+};
+
+
+const pointsEqual = (point, otherPoint) =>
+  point.x === otherPoint.x && point.y === otherPoint.y;
+
+
+const randomPointOnBoard = (boardWidth, boardHeight) => (
+  {
+    x: randomIntegerInRange(0, boardWidth),
+    y: randomIntegerInRange(0, boardHeight),
+  }
+);
+
+
+const randomIntegerInRange = (lowerBound, upperBoundExcl) => {
+  const randomOffset = (upperBoundExcl - lowerBound) * Math.random();
+  return Math.floor(lowerBound + randomOffset);
 };
