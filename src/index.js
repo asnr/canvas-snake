@@ -2,7 +2,7 @@ import 'normalize.css';
 import { BOARD_TILE_WIDTH, BOARD_TILE_HEIGHT } from './constants';
 import { keyPressed, initialModel, updateModel } from './model';
 
-const MILLISECONDS_BETWEEN_UPDATES = 300;
+const MILLISECONDS_BETWEEN_UPDATES = 200;
 
 const TILE_WIDTH = 10;
 const TILE_HEIGHT = 10;
